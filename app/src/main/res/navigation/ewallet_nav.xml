@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ewallet_nav"
+    app:startDestination="@id/currencyConversionFragment">
+
+    <fragment
+        android:id="@+id/currencyConversionFragment"
+        android:name="com.purple.su.ewallet.view.CurrencyConversionFragment"
+        android:label="EWallet"
+        tools:layout="@layout/fragment_currency_conversion">
+        <action
+            android:id="@+id/action_currencyConversionFragment_to_transactionHistoryFragment"
+            app:destination="@id/transactionHistoryFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionHistoryFragment"
+        android:name="com.purple.su.ewallet.view.TransactionHistoryFragment"
+        android:label="fragment_transaction_history"
+        tools:layout="@layout/fragment_transaction_history" >
+        <action
+            android:id="@+id/action_transactionHistoryFragment_to_currencyConversionFragment"
+            app:destination="@id/currencyConversionFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+</navigation>

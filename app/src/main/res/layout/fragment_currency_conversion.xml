@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -9,7 +10,6 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey"
@@ -44,6 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -256,9 +257,9 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/abeezee"
                             android:gravity="right"
+                            android:text="@{rates.sgd}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
-                            android:text="@{rates.sgd}"
                             tools:text="1.0" />
 
                     </LinearLayout>
@@ -287,9 +288,9 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/abeezee"
                             android:gravity="right"
+                            android:text="@{rates.usd}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
-                            android:text="@{rates.usd}"
                             tools:text="1.0" />
 
                     </LinearLayout>
@@ -318,9 +319,9 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/abeezee"
                             android:gravity="right"
+                            android:text="@{rates.eur}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
-                            android:text="@{rates.eur}"
                             tools:text="1.0" />
 
                     </LinearLayout>
@@ -405,8 +406,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ems="10"
+                            android:enabled="false"
                             android:hint="0.0"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPersonName"
+                            android:textColor="@android:color/black" />
 
                     </LinearLayout>
 
@@ -423,6 +426,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/colorAccent"
+                            android:editable="false"
                             android:fontFamily="@font/abeezee"
                             android:text="Convert"
                             android:textColor="@android:color/white"

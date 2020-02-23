@@ -6,6 +6,10 @@
     <string name="sgd">SGD</string>
     <string name="usd">USD</string>
     <string name="eur">EUR</string>
+    <string name="id">ID :&#160; </string>
+    <string name="date">Date :&#160; </string>
+    <string name="from">From :&#160; </string>
+    <string name="to">To : </string>
 
     <string-array name="currencies">
         <item>SGD</item>

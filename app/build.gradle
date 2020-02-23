@@ -1,19 +1,16 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'de.mannodermaus.android-junit5'
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.purple.su.ewallet"
-        minSdkVersion 19
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -27,7 +24,15 @@ android {
     }
     dataBinding.enabled = true
 }
-
+android.testOptions {
+    junitPlatform {
+        filters {
+            engines {
+                include 'spek'
+            }
+        }
+    }
+}
 def lifeCycleExtensionVersion = '1.1.1'
 def supportVersion = '28.0.0'
 def retrofitVersion = '2.3.0'
@@ -75,4 +80,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.6.0'
+
+    testImplementation 'org.junit.platform:junit-platform-engine:1.2.0'
+    testImplementation 'org.jetbrains.spek:spek-api:1.1.5'
+    testImplementation 'org.jetbrains.spek:spek-junit-platform-engine:1.1.5'
+
+//    testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
+//    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.2"
+//
+//    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.5.2"
 }

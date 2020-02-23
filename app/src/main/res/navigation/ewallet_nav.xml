@@ -19,8 +19,8 @@
     <fragment
         android:id="@+id/transactionHistoryFragment"
         android:name="com.purple.su.ewallet.view.TransactionHistoryFragment"
-        android:label="fragment_transaction_history"
-        tools:layout="@layout/fragment_transaction_history" >
+        android:label="Transaction History"
+        tools:layout="@layout/fragment_transaction_history">
         <action
             android:id="@+id/action_transactionHistoryFragment_to_currencyConversionFragment"
             app:destination="@id/currencyConversionFragment"

@@ -6,15 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonElement
 import com.purple.su.ewallet.api.CurrencyApiService
 import com.purple.su.ewallet.data.Rate
+import com.purple.su.ewallet.data.Transaction
+import com.purple.su.ewallet.db.TransactionDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 /**
  * Created by Su Thwe on 2020-02-21.
  */
-class CurrencyViewModel(application: Application): AndroidViewModel(application) {
+class CurrencyViewModel(application: Application): BaseViewModel(application) {
 
     private val apiService = CurrencyApiService()
     private val disposable = CompositeDisposable()
@@ -56,6 +59,13 @@ class CurrencyViewModel(application: Application): AndroidViewModel(application)
             rate.eur = objRates["EUR"].asString
         }
         return rate
+    }
+
+    fun storeTransaction(transaction: Transaction) {
+        launch {
+            val dao = TransactionDatabase(getApplication()).transactionDao()
+            dao.insert(transaction)
+        }
     }
 
     override fun onCleared() {

@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,9 +117,9 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="8dp"
                                         android:fontFamily="@font/abeezee"
-                                        android:text="1000"
                                         android:textColor="@color/darkBlue"
-                                        android:textSize="24sp" />
+                                        android:textSize="20sp"
+                                        tools:text="1000" />
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
                         </RelativeLayout>
@@ -158,9 +158,9 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="8dp"
                                         android:fontFamily="@font/abeezee"
-                                        android:text="500"
                                         android:textColor="@color/darkBlue"
-                                        android:textSize="24sp" />
+                                        android:textSize="20sp"
+                                        tools:text="500" />
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
                         </RelativeLayout>
@@ -199,9 +199,9 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="8dp"
                                         android:fontFamily="@font/abeezee"
-                                        android:text="300"
                                         android:textColor="@color/darkBlue"
-                                        android:textSize="24sp" />
+                                        android:textSize="20sp"
+                                        tools:text="300" />
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
                         </RelativeLayout>
@@ -257,7 +257,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/abeezee"
                             android:gravity="right"
-                            android:text="@{rates.sgd}"
+                            android:text="@{String.valueOf(rates.sgd)}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
                             tools:text="1.0" />
@@ -288,7 +288,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/abeezee"
                             android:gravity="right"
-                            android:text="@{rates.usd}"
+                            android:text="@{String.valueOf(rates.usd)}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
                             tools:text="1.0" />
@@ -319,7 +319,7 @@
                             android:layout_weight="1"
                             android:fontFamily="@font/abeezee"
                             android:gravity="right"
-                            android:text="@{rates.eur}"
+                            android:text="@{String.valueOf(rates.eur)}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="20sp"
                             tools:text="1.0" />

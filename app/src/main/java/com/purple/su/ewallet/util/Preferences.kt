@@ -13,6 +13,9 @@ class Preferences {
         private const val PREF_SGD_BALANCE = "SGD balance"
         private const val PREF_USD_BALANCE = "USD balance"
         private const val PREF_EUR_BALANCE = "EUR balance"
+        private const val PREF_SGD_RATE = "SGD rate"
+        private const val PREF_USD_RATE = "USD rate"
+        private const val PREF_EUR_RATE = "EUR rate"
         private var sharedPreferences: SharedPreferences? = null
 
         @Volatile private var instance: Preferences? = null
@@ -30,42 +33,105 @@ class Preferences {
         }
     }
 
-    fun saveSGDBalance(time: Int) {
-        sharedPreferences?.edit(commit = true) {
-            putInt(PREF_SGD_BALANCE, time)
+    fun getBalance(currency: String): Float {
+        return when(currency) {
+            "SGD" -> getSGDBalance()
+            "USD" -> getUSDBalance()
+            else -> getEURBalance()
         }
     }
 
-    fun getSGDBalance(): Int {
-        val defVal = 1000
-        val time = sharedPreferences?.getInt(PREF_SGD_BALANCE, defVal)
-        time?.let { return it }
+    fun saveBalance(currency: String, amount: Float){
+        when(currency) {
+            "SGD" -> saveSGDBalance(amount)
+            "USD" -> saveUSDBalance(amount)
+            else  -> saveEURBalance(amount)
+        }
+    }
+
+    fun saveSGDBalance(amount: Float) {
+        sharedPreferences?.edit(commit = true) {
+            putFloat(PREF_SGD_BALANCE, amount)
+        }
+    }
+
+    fun getSGDBalance(): Float {
+        val defVal = 1000f
+        val amount = sharedPreferences?.getFloat(PREF_SGD_BALANCE, defVal)
+        amount?.let { return it }
         return defVal
     }
 
-    fun saveUSDBalance(time: Int) {
+    fun saveUSDBalance(amount: Float) {
         sharedPreferences?.edit(commit = true) {
-            putInt(PREF_USD_BALANCE, time)
+            putFloat(PREF_USD_BALANCE, amount)
         }
     }
 
-    fun getUSDBalance(): Int {
-        val defVal = 500
-        val time = sharedPreferences?.getInt(PREF_USD_BALANCE, defVal)
-        time?.let { return it }
+    fun getUSDBalance(): Float {
+        val defVal = 500f
+        val amount = sharedPreferences?.getFloat(PREF_USD_BALANCE, defVal)
+        amount?.let { return it }
         return defVal
     }
 
-    fun saveEURBalance(time: Int) {
+    fun saveEURBalance(amount: Float) {
         sharedPreferences?.edit(commit = true) {
-            putInt(PREF_EUR_BALANCE, time)
+            putFloat(PREF_EUR_BALANCE, amount)
         }
     }
 
-    fun getEURBalance(): Int {
-        val defVal = 300
-        val time = sharedPreferences?.getInt(PREF_EUR_BALANCE, defVal)
-        time?.let { return it }
+    fun getEURBalance(): Float {
+        val defVal = 300f
+        val amount = sharedPreferences?.getFloat(PREF_EUR_BALANCE, defVal)
+        amount?.let { return it }
+        return defVal
+    }
+
+    fun getRate(currency: String): Float {
+        return when(currency) {
+            "SGD" -> getSGDRate()
+            "USD" -> getUSDRate()
+            else -> getEURRate()
+        }
+    }
+
+    fun saveSGDRate(amount: Float) {
+        sharedPreferences?.edit(commit = true) {
+            putFloat(PREF_SGD_RATE, amount)
+        }
+    }
+
+    fun getSGDRate(): Float {
+        val defVal = 1.0f
+        val amount = sharedPreferences?.getFloat(PREF_SGD_RATE, defVal)
+        amount?.let { return it }
+        return defVal
+    }
+
+    fun saveUSDRate(amount: Float) {
+        sharedPreferences?.edit(commit = true) {
+            putFloat(PREF_USD_RATE, amount)
+        }
+    }
+
+    fun getUSDRate(): Float {
+        val defVal = 1.0f
+        val amount = sharedPreferences?.getFloat(PREF_USD_RATE, defVal)
+        amount?.let { return it }
+        return defVal
+    }
+
+    fun saveEURRate(amount: Float) {
+        sharedPreferences?.edit(commit = true) {
+            putFloat(PREF_EUR_RATE, amount)
+        }
+    }
+
+    fun getEURRate(): Float {
+        val defVal = 1.0f
+        val amount = sharedPreferences?.getFloat(PREF_EUR_RATE, defVal)
+        amount?.let { return it }
         return defVal
     }
 }

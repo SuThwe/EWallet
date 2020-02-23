@@ -12,17 +12,14 @@ import java.util.*
  */
 class CurrencyConverter(private val context: Context) {
 
-    fun currencyConvert(from: String, to: String, amount: Double) : Double  {
-        return 100.0
+    fun currencyConvert(to: String, amount: Double) : Double  {
+        val currentRate = Preferences(context).getRate(to).toDouble()
+        val convertedAmount = currentRate*amount
+        return String.format("%.2f", convertedAmount).toDouble()
     }
 
     fun checkBalance(from: String, amount: Double) : Boolean {
-        val pref = Preferences(context)
-        val balance =  when(from) {
-            "SGD" -> pref.getSGDBalance()
-            "USD" -> pref.getUSDBalance()
-            else -> pref.getEURBalance()
-        }
+        val balance =  Preferences(context).getBalance(from)
 
         if(amount < balance)
             return true

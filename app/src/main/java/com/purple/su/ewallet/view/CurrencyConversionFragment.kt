@@ -15,13 +15,11 @@ import androidx.navigation.Navigation
 import com.purple.su.ewallet.R
 import com.purple.su.ewallet.data.Transaction
 import com.purple.su.ewallet.databinding.FragmentCurrencyConversionBinding
+import com.purple.su.ewallet.util.Preferences
 import com.purple.su.ewallet.util.afterTextChanged
 import com.purple.su.ewallet.viewmodel.CurrencyConverter
 import com.purple.su.ewallet.viewmodel.CurrencyViewModel
 import kotlinx.android.synthetic.main.fragment_currency_conversion.*
-import java.time.Instant
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 /**
  * Created by Su Thwe on 2020-02-20.
@@ -39,7 +37,7 @@ class CurrencyConversionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(this).get(CurrencyViewModel::class.java)
-        viewModel.getTodayRates()
+        viewModel.getTodayRates("SGD")
 
         currencyConverter = CurrencyConverter(context!!)
 
@@ -51,8 +49,16 @@ class CurrencyConversionFragment : Fragment() {
             btnConvertClicked()
         }
 
+        setBalance()
         setSpinner()
         observerViewModel()
+    }
+
+    private fun setBalance() {
+        val pref = Preferences(context!!)
+        sgd_balance.text = pref.getSGDBalance().toString()
+        usd_balance.text = pref.getUSDBalance().toString()
+        eur_balance.text = pref.getEURBalance().toString()
     }
 
     private fun setSpinner() {
@@ -70,9 +76,9 @@ class CurrencyConversionFragment : Fragment() {
         }
 
         spinner_from.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 fromCurrency = spinner_from.selectedItem.toString()
-                convertAmount()
+                viewModel.getTodayRates(fromCurrency)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
@@ -80,15 +86,14 @@ class CurrencyConversionFragment : Fragment() {
         }
 
         spinner_to.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
-                toCurrency = spinner_from.selectedItem.toString()
+            override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
+                toCurrency = spinner_to.selectedItem.toString()
                 convertAmount()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
             }
         }
-
     }
 
     private fun observerViewModel() {
@@ -96,6 +101,7 @@ class CurrencyConversionFragment : Fragment() {
             rate?.let {
                 dataBinding.rates = rate
                 currency_layout.visibility = View.VISIBLE
+                convertAmount()
             }
         })
 
@@ -124,7 +130,7 @@ class CurrencyConversionFragment : Fragment() {
 
     private fun convertAmount() {
         if(!edit_from_amount.text.isNullOrEmpty()) {
-            val convertedAmount = currencyConverter.currencyConvert(fromCurrency, toCurrency, edit_from_amount.text.toString().toDouble())
+            val convertedAmount = currencyConverter.currencyConvert(toCurrency, edit_from_amount.text.toString().toDouble())
             edit_to_amount.setText(convertedAmount.toString())
         }
     }
@@ -135,6 +141,7 @@ class CurrencyConversionFragment : Fragment() {
         }
         else {
             if (currencyConverter.checkBalance(fromCurrency, edit_from_amount.text.toString().toDouble())) {
+                //store transaction
                 val transaction = Transaction(
                     convertFrom = fromCurrency,
                     convertTo = toCurrency,
@@ -143,6 +150,9 @@ class CurrencyConversionFragment : Fragment() {
                     transactionDate = currencyConverter.getTodayDate()
                 )
                 viewModel.storeTransaction(transaction)
+
+                deductAndAddFromBalance()
+
                 edit_from_amount.setText("")
                 edit_to_amount.setText("")
                 Toast.makeText(context, "Transferred success", Toast.LENGTH_SHORT).show()
@@ -157,6 +167,26 @@ class CurrencyConversionFragment : Fragment() {
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
             }
+        }
+    }
+
+    private fun deductAndAddFromBalance() {
+        val pref = Preferences(context!!)
+        val remainedBalance = pref.getBalance(fromCurrency) - edit_from_amount.text.toString().toFloat()
+        val addedBalance = pref.getBalance(toCurrency) + edit_to_amount.text.toString().toFloat()
+        pref.saveBalance(fromCurrency, remainedBalance)
+        pref.saveBalance(toCurrency, addedBalance)
+
+        when(fromCurrency) {
+            "SGD" -> sgd_balance.text = remainedBalance.toString()
+            "USD" -> usd_balance.text = remainedBalance.toString()
+            else -> eur_balance.text = remainedBalance.toString()
+        }
+
+        when(toCurrency) {
+            "SGD" -> sgd_balance.text = addedBalance.toString()
+            "USD" -> usd_balance.text = addedBalance.toString()
+            else -> eur_balance.text = addedBalance.toString()
         }
     }
 

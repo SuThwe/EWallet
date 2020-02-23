@@ -19,7 +19,14 @@ class CurrencyApiService {
         .build()
         .create(CurrencyApi::class.java)
 
-    fun getTodayRate(): Single<JsonElement> {
-        return api.getTodayRate()
+    /* base="EUR" , symbols="SGD,USD,EUR", then got error,
+       so change the symbols for "EUR"
+    */
+    fun getTodayRate(base: String): Single<JsonElement> {
+        var symbols = when(base) {
+            "EUR" -> "SGD,USD"
+            else -> "SGD,USD,EUR"
+        }
+        return api.getTodayRate(base, symbols)
     }
 }

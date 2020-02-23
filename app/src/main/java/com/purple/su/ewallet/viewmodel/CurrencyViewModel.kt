@@ -1,13 +1,13 @@
 package com.purple.su.ewallet.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonElement
 import com.purple.su.ewallet.api.CurrencyApiService
 import com.purple.su.ewallet.data.Rate
 import com.purple.su.ewallet.data.Transaction
 import com.purple.su.ewallet.db.TransactionDatabase
+import com.purple.su.ewallet.util.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -26,15 +26,21 @@ class CurrencyViewModel(application: Application): BaseViewModel(application) {
     val loading = MutableLiveData<Boolean>()
     val error = MutableLiveData<Boolean>()
 
-    fun getTodayRates() {
+    fun getTodayRates(base: String) {
         loading.value = true
         disposable.add(
-            apiService.getTodayRate()
+            apiService.getTodayRate(base)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<JsonElement>() {
                     override fun onSuccess(jsonElement: JsonElement) {
-                        var rates = convertJsonElementToList(jsonElement)
+                        val rates = convertJsonElementToRateObj(jsonElement)
+
+                        val pref = Preferences(getApplication())
+                        pref.saveSGDRate(rates.sgd.toFloat())
+                        pref.saveUSDRate(rates.usd.toFloat())
+                        pref.saveEURRate(rates.eur.toFloat())
+
                         rate.value = rates
                         loading.value = false
                         error.value = false
@@ -49,14 +55,17 @@ class CurrencyViewModel(application: Application): BaseViewModel(application) {
         )
     }
 
-    private fun convertJsonElementToList(jsonElement: JsonElement): Rate {
-        var rate = Rate("", "", "")
+    private fun convertJsonElementToRateObj(jsonElement: JsonElement): Rate {
+        var rate = Rate(1.0, 1.0, 1.0)
         val json = jsonElement.asJsonObject
         json?.let {
             val objRates = json["rates"].asJsonObject
-            rate.sgd = objRates["SGD"].asString
-            rate.usd = objRates["USD"].asString
-            rate.eur = objRates["EUR"].asString
+            rate.sgd = String.format("%.2f", objRates["SGD"].asDouble).toDouble()
+            rate.usd = String.format("%.2f", objRates["USD"].asDouble).toDouble()
+
+            objRates["EUR"]?.let {
+                rate.eur = String.format("%.2f", objRates["EUR"].asDouble).toDouble()
+            }
         }
         return rate
     }
